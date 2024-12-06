@@ -55,8 +55,15 @@ service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   type: ClusterIP
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  servicePort: 80
-  containerPort: 80
+  # exposedPorts allows you to expose multiple ports.
+  # The example below exposes an app that listens on port 8080 and is accessible from port 80 within the cluster via the service.
+  exposedPorts:
+    - name: http
+      externalPort: 80
+      containerPort: 8080
+    - name: grpc
+      externalPort: 5091
+      containerPort: 5091
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -89,12 +96,12 @@ resources: {}
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
-  enabled: false
+  enabled: true
   httpGet:
     path: /
     port: http
 readinessProbe:
-  enabled: false
+  enabled: true
   httpGet:
     path: /
     port: http
