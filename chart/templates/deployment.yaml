@@ -13,8 +13,10 @@ spec:
       {{- include "demo.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        # This annotation is used to automatically roll out the deployment when the ConfigMap changes
+        app.kubernetes.io/configmap.checksum: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
