@@ -38,23 +38,26 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.app.command }}
+          command:
+            {{- toYaml .Values.app.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.app.args }}
+          args:
+            {{- toYaml .Values.app.args | nindent 12 }}
+          {{- end }}
           ports:
             {{- range .Values.service.exposedPorts }}
             - name: {{ .name }}
               containerPort: {{ .containerPort }}
               protocol: TCP
             {{- end }}
-          {{- if .Values.livenessProbe.enabled }}
+          startupProbe:
+            {{- toYaml .Values.startupProbe | nindent 12 }}
           livenessProbe:
-            # The "omit" function prevents the "enabled" key from being rendered
-            # https://stackoverflow.com/questions/75801618/how-to-call-toyaml-and-exclude-particular-key
-            {{- omit .Values.livenessProbe "enabled" | toYaml | nindent 12 }}
-          {{- end }}
-          {{- if .Values.readinessProbe.enabled }}
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
-            # Same with the livenessProbe
-            {{- omit .Values.readinessProbe "enabled" | toYaml | nindent 12 }}
-          {{- end }}
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
