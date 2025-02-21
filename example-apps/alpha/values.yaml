@@ -107,6 +107,7 @@ resources:
 livenessProbe:
   httpGet:
     path: /healthy
+    periodSeconds: 5
     port: http
 readinessProbe:
   httpGet:
