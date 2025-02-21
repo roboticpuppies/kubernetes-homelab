@@ -358,17 +358,18 @@ server:
   ingress:
     ## If true, Prometheus server Ingress will be created
     ##
-    enabled: false
+    enabled: true
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    # ingressClassName: nginx
+    ingressClassName: nginx
 
     ## Prometheus server Ingress annotations
     ##
-    annotations: {}
-    #   kubernetes.io/ingress.class: nginx
-    #   kubernetes.io/tls-acme: 'true'
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: "letsencrypt-prod-issuer"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
     ## Prometheus server Ingress additional labels
     ##
@@ -380,8 +381,8 @@ server:
     ## Prometheus server Ingress hostnames with optional path
     ## Must be provided if Ingress is enabled
     ##
-    hosts: []
-    #   - prometheus.domain.com
+    hosts:
+      - prometheus.minikube.servercare.id
     #   - domain.com/prometheus
 
     path: /
@@ -399,10 +400,10 @@ server:
     ## Prometheus server Ingress TLS configuration
     ## Secrets must be manually created in the namespace
     ##
-    tls: []
-    #   - secretName: prometheus-server-tls
-    #     hosts:
-    #       - prometheus.domain.com
+    tls:
+      - secretName: prometheus-server-tls
+        hosts:
+          - prometheus.minikube.servercare.id
 
   ## Server Deployment Strategy type
   strategy:
@@ -501,7 +502,7 @@ server:
 
     ## Prometheus server data Persistent Volume size
     ##
-    size: 8Gi
+    size: 2Gi
 
     ## Prometheus server data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
@@ -744,7 +745,7 @@ server:
 
   ## Prometheus data retention period (default if not specified is 15 days)
   ##
-  retention: "3d"
+  retention: "1d"
 
   ## Prometheus' data retention size. Supported units: B, KB, MB, GB, TB, PB, EB.
   ##
