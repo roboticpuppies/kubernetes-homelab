@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: argocd.sample.qiscus.io
+  - host: argocd.minikube.servercare.id
     http:
       paths:
       - path: /
@@ -23,5 +23,5 @@ spec:
               number: 80
   tls:
   - hosts:
-    - argocd.sample.qiscus.io
+    - argocd.minikube.servercare.id
     secretName: argocd-tls

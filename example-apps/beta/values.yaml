@@ -82,14 +82,14 @@ ingress:
     cert-manager.io/cluster-issuer: "letsencrypt-prod-issuer"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
-    - host: abc.sample.qiscus.io
+    - host: abc.minikube.servercare.id
       paths:
         - path: /
           pathType: Prefix
   tls:
    - secretName: beta-tls
      hosts:
-       - abc.sample.qiscus.io
+       - abc.minikube.servercare.id
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
