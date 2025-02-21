@@ -71,7 +71,6 @@ service:
     - name: http
       externalPort: 80
       containerPort: 8080
-
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
@@ -104,11 +103,11 @@ resources:
     memory: 50Mi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-livenessProbe:
-  httpGet:
-    path: /healthy
-    periodSeconds: 5
-    port: http
+livenessProbe: {}
+  # httpGet:
+  #   path: /healthy
+  #   periodSeconds: 5
+  #   port: http
 readinessProbe:
   httpGet:
     path: /ready
