@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-no-secctx
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu:22.04
+      command: ["sleep", "3600"]

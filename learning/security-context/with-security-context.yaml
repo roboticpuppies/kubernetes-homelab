@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-secctx                   # Nama pod
+spec:
+  securityContext:                      # Security context level pod
+    runAsNonRoot: true                  # Paksa container tidak boleh jalan sebagai root user (uid 0)
+    fsGroup: 2000                       # File di volume akan di-`chgrp` ke GID 2000 agar bisa diakses container
+  containers:
+    - name: ubuntu                      # Nama container dalam pod
+      image: ubuntu:22.04               # Gunakan image ubuntu (versi stabil dan support CLI)
+      command: ["sleep", "3600"]        # Biar container tetap hidup buat observasi manual
+      securityContext:                  # Security context khusus untuk container ini
+        runAsUser: 65534                 # Jalankan proses sebagai user ID 1000 (bukan root)
+        runAsGroup: 65534                # Gunakan group ID 3000 untuk proses utama
+        allowPrivilegeEscalation: false # Cegah proses bisa naik jadi root (contoh: `sudo`, exploit, dll)
+        readOnlyRootFilesystem: true    # File system root (/) hanya-baca — cegah malware/modifikasi runtime
+        capabilities:
+          drop:                         # Hapus semua Linux capabilities default (minimalkan permukaan serangan)
+            - ALL
