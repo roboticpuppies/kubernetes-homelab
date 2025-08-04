@@ -1,0 +1,15 @@
+# kubectl create clusterrole cluster-viewer --verb=get,list,watch --resource='*' --dry-run=client -o yaml | tee learning/rbac/cluster-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: cluster-viewer
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
