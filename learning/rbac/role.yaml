@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+
+---
+# kubectl create role -n staging staging-viewer --verb=get,list,watch --resource='*' --dry-run=client -o yaml | tee role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: staging-viewer-role
+  namespace: staging
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+# kubectl create rolebinding staging-viewer -n staging --role=staging-viewer --group=staging-viewer --dry-run=client -o yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: staging-viewer-binding
+  namespace: staging
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: staging-viewer-role
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: staging-viewer
