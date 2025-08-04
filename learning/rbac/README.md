@@ -9,7 +9,7 @@
 
 ## ClusterRole Exercise
 
-1. Create a read-only ClusterRole named `cluster-viewer` in `cluster-role.yaml`.
+1. Create a read-only ClusterRole named `cluster-viewer-role` in `cluster-role.yaml`.
 2. Bind that ClusterRole into a Group named `cluster-viewer` in `cluster-role.yaml`
 3. Create a user called `luna` that will be a member of `cluster-viewer` group. Let's create the private key first.
    ```
