@@ -1,0 +1,120 @@
+---
+# PostgreSQL superuser credentials for the cluster
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example-app-db-cluster-superuser
+  namespace: production
+type: kubernetes.io/basic-auth
+data:
+  password: c2VjcmV0UGFzc3dvcmQ=
+  username: cG9zdGdyZXM=
+---
+# PostgreSQL credentials for example-app-01
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example-app-01-db-user
+  namespace: production
+type: kubernetes.io/basic-auth
+data:
+  password: ZXhhbXBsZXBhc3N3b3Jk
+  username: YXBwMDE=
+---
+# PostgreSQL credentials for example-app-02
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example-app-02-db-user
+  namespace: production
+type: kubernetes.io/basic-auth
+data:
+  password: ZXhhbXBsZXBhc3N3b3Jk
+  username: YXBwMDI=
+---
+# Shared PostgreSQL cluster for both example apps
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: example-app-db-cluster
+  namespace: production
+spec:
+  description: "Shared PostgreSQL cluster for example apps"
+  instances: 3
+  managed:
+    # Create PostgreSQL users / roles
+    roles:
+    - name: app01
+      passwordSecret:
+        name: example-app-01-db-user
+    - name: app02
+      passwordSecret:
+        name: example-app-02-db-user
+  # Example of rolling update strategy:
+  # - unsupervised: automated update of the primary once all
+  #                 replicas have been upgraded (default)
+  # - supervised: requires manual supervision to perform
+  #               the switchover of the primary
+  primaryUpdateStrategy: unsupervised
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: example-app-db-cluster-superuser
+  # I know I can use the bootstrap to create DBs but I want to try the Database API
+  postgresql:
+    parameters:
+      max_connections: "200"
+      shared_buffers: "128MB"
+      log_statement: "all"
+      log_min_duration_statement: "5000"
+      auto_explain.log_min_duration: "10s"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "1"
+    limits:
+      memory: "512Mi"
+      cpu: "2"
+
+  storage:
+    size: 1Gi
+---
+# Database for example-app-01
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: example-app-01-db
+  namespace: production
+spec:
+  cluster:
+    name: example-app-db-cluster
+  owner: app01
+  name: example_app_01_db
+---
+# Database for example-app-02
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: example-app-02-db
+  namespace: production
+spec:
+  cluster:
+    name: example-app-db-cluster
+  owner: app02
+  name: example_app_02_db
+---
+# Connection pooler
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: example-app-db-ro-pooler
+  namespace: production
+spec:
+  cluster:
+    name: example-app-db-cluster
+  instances: 1
+  type: ro
+  pgbouncer:
+    poolMode: session
+    parameters:
+      max_client_conn: "1000"
+      default_pool_size: "10"
