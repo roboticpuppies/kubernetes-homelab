@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alpha
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: app
+    server: https://kubernetes.default.svc
+  source:
+    path: chart
+    repoURL: git@github.com:roboticpuppies/kubernetes-homelab.git
+    targetRevision: main
+    helm:
+      valueFiles:
+        - ../example-apps/alpha/values.yaml
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

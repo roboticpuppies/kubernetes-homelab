@@ -1,0 +1,16 @@
+global:
+  domain: cd.minikube.servercare.id
+
+certificate:
+  enabled: false
+
+# Currently I don't have cert-manager installed because I don't want to deal with the Cloudflare API Key
+# So I disable the certificate for now
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    tls: false
