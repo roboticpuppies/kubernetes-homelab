@@ -1,0 +1,29 @@
+---
+serverDefinitions:
+  enabled: true
+  servers:
+    example-app-db-cluster:
+      Name: "Shared PostgreSQL Cluster for Example Apps"
+      Group: production
+      Host: example-app-db-cluster-ro.production.svc.cluster.local
+      Port: "5432"
+      MaintenanceDB: postgres
+      Username: postgres
+      SSLMode: disable
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: pgadmin.minikube.servercare.id
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+env:
+  email: mail@example.com
+  # Yes, I should use Secrets instead of storing the password in plain text
+  password: admin
