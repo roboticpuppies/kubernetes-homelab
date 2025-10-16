@@ -45,9 +45,13 @@ spec:
     # Create PostgreSQL users / roles
     roles:
     - name: app01
+      ensure: present
+      login: true
       passwordSecret:
         name: example-app-01-db-user
     - name: app02
+      ensure: present
+      login: true
       passwordSecret:
         name: example-app-02-db-user
   # Example of rolling update strategy:
@@ -106,13 +110,13 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
 metadata:
-  name: example-app-db-ro-pooler
+  name: example-app-db-rw-pooler
   namespace: production
 spec:
   cluster:
     name: example-app-db-cluster
   instances: 1
-  type: ro
+  type: rw
   pgbouncer:
     poolMode: session
     parameters:
