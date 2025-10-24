@@ -20,3 +20,18 @@ minikube start --memory 6g
 ├── learning # For me to learn and test kubernetes basics
 └── live # Kubernetes manifests that have been running in my homelab
 ```
+
+## Todo
+
+Will complete the list and details later.
+
+[v] Ingress NGINX
+[v] CloudNativePG
+[v] ArgoCD
+[v] PgAdmin
+[] KEDA
+[] API Gateway
+[] Monitoring stack
+[] Redis
+[] Deploy microservice example app
+[] Vault
