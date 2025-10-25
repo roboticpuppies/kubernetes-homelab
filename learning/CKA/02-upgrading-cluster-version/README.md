@@ -51,7 +51,7 @@ apt-cache madison kubelet
 # optional
 # apt-mark unhold kubelet
 
-apt install kubelet=1.33.5-1.1
+apt install kubelet=1.33.5-1.1 kubelet=1.33.5-1.1
 
 # optional
 # apt-mark hold kubelet
